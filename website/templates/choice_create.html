@@ -1,0 +1,14 @@
+{% extends 'layout.html' %} 
+
+{% block head %}
+<title>Create Choice</title>
+{% endblock %} 
+
+{% block body %} 
+<div>
+    <form method="post" action={% url 'polls:choice_create' %}>
+        {% csrf_token %} 
+        {{ form.as_p }}
+        <button type="submit">Create</button>
+    </form>
+</div>

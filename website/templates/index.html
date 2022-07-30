@@ -1,0 +1,25 @@
+{% extends "layout.html" %} 
+
+{% block head %} 
+<title>User Create</title>
+{% endblock %} 
+
+{% block body %} 
+<div>
+    <div>
+        <form method="post" action={% url 'polls:index' %}>
+            {% csrf_token %} 
+            <input type="text" name="q" />
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <hr>
+    <ul>
+        {% for question in questions %}
+            <li><a href={% url 'polls:question_details' question.id %}>{{ question.title }}</a></li>
+        {% empty %} 
+            <p>No questions available at the moment...</p>
+        {% endfor %} 
+    </ul>
+</div>
+{% endblock %} 

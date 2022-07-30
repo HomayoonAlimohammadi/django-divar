@@ -1,0 +1,16 @@
+{% extends "layout.html" %} 
+
+{% block head %} 
+<title>User Create</title>
+{% endblock %} 
+
+{% block body %} 
+<div>
+    <form action={% url 'polls:user_create' %} method="post">
+        {% csrf_token %} 
+        {{ form.as_p }}
+        <button type="submit">Create</button>
+    </form>
+    <p>Already have and account? <a href={% url 'polls:user_login' %}>Login.</a></p>
+</div>
+{% endblock %} 

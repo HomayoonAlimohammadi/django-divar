@@ -1,0 +1,17 @@
+{% extends 'layout.html' %} 
+
+
+{% block head %} 
+<title>User Login</title>
+{% endblock %} 
+
+{% block body %} 
+<div>
+    <form method="post" action={% url 'polls:user_login' %}>
+        {% csrf_token %} 
+        {{ form.as_p }} 
+        <button type="submit">Login</button>
+    </form>
+    <p>Need an account? <a href={% url 'polls:user_create' %}>Sign up.</a></p>
+</div>
+{% endblock %} 

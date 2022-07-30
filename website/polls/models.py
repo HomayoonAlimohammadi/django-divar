@@ -1,36 +1,25 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
-class Blog(models.Model):
-    name = models.CharField(max_length=128)
-    description = models.TextField()
-
-    def __str__(self) -> str:
-        return f"Blog({self.name})"
+User = get_user_model()
 
 
-class Author(models.Model):
-    name = models.CharField(max_length=128)
-    password = models.CharField(max_length=200, null=True)
-    email = models.EmailField()
+class Question(models.Model):
+    title = models.TextField()
+    users = models.ManyToManyField(
+        User, null=True, blank=True, related_name="questions"
+    )
 
     def __str__(self) -> str:
-        return f"Author({self.name})"
+        return f"Question({self.title[:10]}...)"
 
 
-class Post(models.Model):
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    authors = models.ManyToManyField(Author)
+class Choice(models.Model):
     title = models.CharField(max_length=128)
-    description = models.TextField()
-    pub_date = models.DateField(auto_now_add=True)
-    mod_date = models.DateField(auto_now=True)
-    number_of_comments = models.IntegerField(default=0)
-    number_of_likes = models.IntegerField(default=0)
-    rating = models.IntegerField(null=True, blank=True, default=None)
-
-    class Meta:
-        ordering = ["-pub_date", "-number_of_likes"]
+    question = models.ForeignKey(
+        Question, related_name="choices", on_delete=models.CASCADE
+    )
 
     def __str__(self) -> str:
-        return f"Post({self.title})"
+        return f"Choice({self.title[:5]}...)"
