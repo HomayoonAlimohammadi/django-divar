@@ -1,5 +1,5 @@
 from __future__ import annotations
-from polls.models import Post, Blog
+from polls.models import Post, Blog, Author
 
 
 def get_most_comment_posts() -> list[Post]:
@@ -32,9 +32,9 @@ def get_user_most_liked_post(user_ids: list[int]) -> dict[str, Post]:
     return mapping
 
 
-def get_top_posts_with_users(users: list[str]) -> list[Post]:
+def get_top_posts_with_users(users: list[Author]) -> list[Post]:
     posts = (
-        Post.objects.filter(author__name__in=users)
+        Post.objects.filter(author__in=users)
         .order_by("-number_of_likes")
         .distinct()[:10]
     )
