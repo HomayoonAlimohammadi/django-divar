@@ -5,6 +5,7 @@
 {% endblock %} 
 
 {% block body %} 
+<h2>Create a Question:</h2>
 <div>
     <form method="post" action={% url 'polls:question_create' %}>
         {% csrf_token %} 

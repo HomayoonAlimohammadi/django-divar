@@ -32,12 +32,14 @@ class UserLoginForm(forms.ModelForm):
         fields = ["username", "password"]
 
     def clean(self):
-        cleaned_data = super(UserCreateForm, self).clean()  # type: ignore
+        print("i am cleaning")
+        cleaned_data = super(UserLoginForm, self).clean()  # type: ignore
         password = cleaned_data.get("password")  # type: ignore
         confirm_password = cleaned_data.get("confirm_password")  # type: ignore
-
+        print(password, confirm_password)
         if password != confirm_password:
             raise forms.ValidationError("password and confirm_password does not match")
+        return cleaned_data
 
 
 class QuestionCreateForm(forms.ModelForm):

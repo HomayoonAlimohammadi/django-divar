@@ -1,7 +1,7 @@
 {% extends "layout.html" %} 
 
 {% block head %} 
-<title>User Create</title>
+<title>Home Page</title>
 {% endblock %} 
 
 {% block body %} 
@@ -12,6 +12,8 @@
             <input type="text" name="q" />
             <button type="submit">Search</button>
         </form>
+        <br>
+        <a href="{% url 'polls:question_create' %}"><button type="button">Create Question</button></a>
     </div>
     <hr>
     <ul>

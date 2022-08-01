@@ -6,9 +6,10 @@
 
 {% block body %} 
 <div>
-    <form method="post" action={% url 'polls:choice_create' %}>
+    <form method="post" action={% url 'polls:choice_create' question.pk %}>
         {% csrf_token %} 
-        {{ form.as_p }}
-        <button type="submit">Create</button>
+        Choice: <input type="text" name="choice" /><br/><br/>
+        <button type="submit">Add Choice</button>
     </form>
 </div>
+{% endblock %}

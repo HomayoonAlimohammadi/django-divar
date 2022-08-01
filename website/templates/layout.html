@@ -5,7 +5,15 @@
         {% endblock %} 
     </head>
     <body>
-        <h1>Polls app!</h1>
+        <h1><a href="{% url 'polls:index' %}">Polls app!</a></h1>
+        {% if request.user.is_authenticated %} 
+            <p><b>Hello, {{ request.user.username }}</b></p>
+            <a href="{% url 'polls:user_logout' %}"><button type="button">Logout</button></a>
+        {% else %} 
+            <p><b>You are not signed in.</b></p>
+            <a href="{% url 'polls:user_create' %}"><button type="button">Register</button></a>
+            <a href="{% url 'polls:user_login' %}"><button type="button">Login</button></a>
+        {% endif %} 
         <ul>
             {% if messages %}
                 {% for message in messages %} 

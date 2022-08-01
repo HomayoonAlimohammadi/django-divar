@@ -1,0 +1,12 @@
+{% extends 'layout.html' %} 
+
+{% block body %} 
+<div>
+    <h2>Are you sure you want to <b>Logout?</b></h2>
+    <form action="{% url 'polls:user_logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Log me Out!</button>
+        <a href="{% url 'polls:index' %}"><button type="button">No, Take me back!</button></a>
+    </form>
+</div>
+{% endblock %}

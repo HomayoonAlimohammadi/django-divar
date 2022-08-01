@@ -7,7 +7,7 @@
 
 {% block body %} 
 <div>
-    <form method="post" action={% url 'polls:user_login' %}>
+    <form method="post" action="{% url 'polls:user_login' %}">
         {% csrf_token %} 
         {{ form.as_p }} 
         <button type="submit">Login</button>
