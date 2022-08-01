@@ -1,5 +1,9 @@
 {% extends 'layout.html' %} 
 
+{% block head %} 
+<title>Results</title>
+{% endblock %} 
+
 {% block body %} 
 {% for choice in question.choices.all %} 
 <p>{{ choice.title }}: {{ choice.users.count }}</p>

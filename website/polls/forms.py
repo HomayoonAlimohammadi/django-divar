@@ -23,23 +23,32 @@ class UserCreateForm(forms.ModelForm):
             raise forms.ValidationError("password and confirm_password does not match")
 
 
-class UserLoginForm(forms.ModelForm):
+class UserLoginForm(forms.Form):
+    username = forms.CharField(max_length=128)
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
 
-    class Meta:
-        model = User
-        fields = ["username", "password"]
-
     def clean(self):
-        print("i am cleaning")
-        cleaned_data = super(UserLoginForm, self).clean()  # type: ignore
+        cleaned_data = super(UserLoginForm, self).clean()
         password = cleaned_data.get("password")  # type: ignore
         confirm_password = cleaned_data.get("confirm_password")  # type: ignore
-        print(password, confirm_password)
         if password != confirm_password:
             raise forms.ValidationError("password and confirm_password does not match")
-        return cleaned_data
+
+
+class UserUpdateForm(forms.Form):
+    first_name = forms.CharField(max_length=128, required=False)
+    last_name = forms.CharField(max_length=128, required=False)
+    email = forms.EmailField(max_length=256)
+    password = forms.CharField(widget=forms.PasswordInput(), required=False)
+    confirm_password = forms.CharField(widget=forms.PasswordInput(), required=False)
+
+    def clean(self):
+        cleaned_data = super(UserUpdateForm, self).clean()
+        password = cleaned_data.get("password")  # type: ignore
+        confirm_password = cleaned_data.get("confirm_password")  # type: ignore
+        if password != confirm_password:
+            raise forms.ValidationError("password and confirm_password does not match")
 
 
 class QuestionCreateForm(forms.ModelForm):

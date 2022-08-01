@@ -1,0 +1,25 @@
+{% extends 'layout.html' %} 
+
+
+{% block head %} 
+<title>Profile</title>
+{% endblock %} 
+
+
+{% block body %} 
+<b>{{ user.username }}'s Profile</b>
+<p>
+    Email: {{ user.email }}
+</p>
+<p>
+    First Name: {{ user.first_name }} 
+</p>
+<p>
+    Last Name: {{ user.last_name }}
+</p>
+{% if request.user.is_authenticated %} 
+    {% if request.user == user %} 
+        <a href="{% url 'polls:user_update' user.username %}"><button type="button">Edit Profile</button></a>
+    {% endif %} 
+{% endif %} 
+{% endblock %} 

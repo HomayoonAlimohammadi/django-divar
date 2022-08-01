@@ -9,7 +9,10 @@
 <div>
     <form method="post" action="{% url 'polls:user_login' %}">
         {% csrf_token %} 
-        {{ form.as_p }} 
+        <!-- Username: <input type="text" name="username" /><br/> 
+        Password: <input type="password" name="password"><br/>
+        Confirm Password: <input type="password" name="confirm_password"><br/> -->
+        {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
     <p>Need an account? <a href={% url 'polls:user_create' %}>Sign up.</a></p>

@@ -6,19 +6,18 @@
 
 {% block body %} 
 <h3>{{question.title}}</h3>
-<p>Choices:</p>
 <form action="{% url 'polls:question_submit' question.pk %}" method="post">
     {% csrf_token %}
     {% for choice in question.choices.all %} 
-        <input id="{{ choice.pk }}" type="radio" name="choice" />
-        <label for="{{ choice.pk }}">{{ choice.title }}</label><br/>
+        <input id="{{ choice.pk }}" type="radio" name="choice" value="{{ choice.pk }}" />
+        <label for="choice">{{ choice.title }}</label><br/>
 
     {% endfor %} 
     <br/>
     <button type="submit">Submit</button>
 </form>
 <hr>
-{% if request.user.is_authenticated %} 
+{% if request.user.is_authenticated and request.user == question.user %} 
 <a href="{% url 'polls:choice_create' question.pk %}"><button type="button">Add a Choice</button></a>
 {% endif %} 
 {% endblock %} 

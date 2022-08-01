@@ -7,6 +7,7 @@ User = get_user_model()
 
 class Question(models.Model):
     title = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateField(auto_now_add=True)
     mod_date = models.DateField(auto_now=True)
 

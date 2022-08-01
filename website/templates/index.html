@@ -7,18 +7,18 @@
 {% block body %} 
 <div>
     <div>
-        <form method="post" action={% url 'polls:index' %}>
-            {% csrf_token %} 
+        <form method="get" action="{% url 'polls:index' %}">
             <input type="text" name="q" />
             <button type="submit">Search</button>
         </form>
         <br>
         <a href="{% url 'polls:question_create' %}"><button type="button">Create Question</button></a>
+        <a href="{% url 'polls:user_list' %}"><button type="button">Users</button></a>
     </div>
     <hr>
     <ul>
         {% for question in questions %}
-            <li><a href={% url 'polls:question_details' question.id %}>{{ question.title }}</a></li>
+            <li><a href="{% url 'polls:question_details' question.id %}">{{ question.title }}</a></li>
         {% empty %} 
             <p>No questions available at the moment...</p>
         {% endfor %} 

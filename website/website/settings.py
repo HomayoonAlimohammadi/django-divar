@@ -24,12 +24,12 @@ load_dotenv(os.path.join(BASE_DIR, ".env"), override=True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = (
-    os.environ.get("SECRET_KEY")
+    os.environ.get("DJANGO_SECRET_KEY")
     or "django-insecure-7s)btwr=y!6t3f90nlno*dr5xpk$^9z4*k9$pw54=3_(#icxhx"
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") or False
+DEBUG = (os.environ.get("DEBUG")) == "1"
 ENV_ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
 ALLOWED_HOSTS = []
 if ENV_ALLOWED_HOSTS:

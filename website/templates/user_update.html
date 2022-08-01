@@ -1,0 +1,15 @@
+{% extends "layout.html" %} 
+
+{% block head %} 
+<title>User Update</title>
+{% endblock %} 
+
+{% block body %} 
+<div>
+    <form action="{% url 'polls:user_update' request.user.username %}" method="post">
+        {% csrf_token %} 
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+    </form>
+</div>
+{% endblock %} 
