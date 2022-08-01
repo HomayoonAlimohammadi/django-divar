@@ -70,7 +70,7 @@ class QuestionModelTest(TestCase):
         new_question = Question.objects.create(title="new q", user=self.user_1)
         self.assertTrue(new_question.is_recent())
         future_time = (timezone.now() + timezone.timedelta(days=2)).date()
-        future_question = Question.objects.create(
-            title="future q", user=self.user_1, pub_date=future_time
-        )
-        self.assertTrue(future_question.is_recent())
+        future_question = Question.objects.create(title="future q", user=self.user_1)
+        future_question.pub_date = future_time
+        future_question.save()
+        self.assertFalse(future_question.is_recent())

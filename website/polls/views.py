@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
+from django.views import generic
 
 
 User = get_user_model()
@@ -194,3 +195,21 @@ def choice_create_view(request, question_id: int):
         return redirect("polls:question_details", pk=question_id)
     context = {"form": form, "question": question}
     return render(request, "choice_create.html", context=context)
+
+
+class UserListView(generic.ListView):
+    model = User
+    template_name = "user_list.html"
+    context_object_name = "users"
+
+
+class UserDetailView(generic.DetailView):
+    model = User
+    template_name = "user_details.html"
+    context_object_name = "user"
+
+
+class QuestionDetailView(generic.DetailView):
+    model = Question
+    template_name = "question_details.html"
+    context_object_name = "question"

@@ -15,7 +15,10 @@ class Question(models.Model):
         ordering = ["-pub_date"]
 
     def is_recent(self) -> bool:
-        return self.pub_date >= (timezone.now() - timezone.timedelta(days=1)).date()
+        return (
+            self.pub_date >= (timezone.now() - timezone.timedelta(days=1)).date()
+            and self.pub_date <= timezone.now().date()
+        )
 
     def __str__(self) -> str:
         return f"Question({self.title[:10]}...)"

@@ -1,6 +1,17 @@
-h1 a {
-    color: orange 
+a, h2, b, h1, h3 {
+    color: orange !important
 }
+
+body, html {
+    height: 100%;
+}
+
 body {
     background-image: url("images/gradient.jpg");
+}
+button {
+    border-radius: 10px !important
+}
+input {
+    border-radius: 10px;
 }
