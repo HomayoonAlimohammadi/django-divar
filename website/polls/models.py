@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -11,11 +11,14 @@ class Question(models.Model):
     pub_date = models.DateField(auto_now_add=True)
     mod_date = models.DateField(auto_now=True)
 
-    def __str__(self) -> str:
-        return f"Question({self.title[:10]}...)"
-
     class Meta:
         ordering = ["-pub_date"]
+
+    def is_recent(self) -> bool:
+        return self.pub_date >= (timezone.now() - timezone.timedelta(days=1)).date()
+
+    def __str__(self) -> str:
+        return f"Question({self.title[:10]}...)"
 
 
 class Choice(models.Model):

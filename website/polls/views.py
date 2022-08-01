@@ -17,7 +17,8 @@ from django.urls import reverse, reverse_lazy
 User = get_user_model()
 
 
-def handle_404_view(request, exception):
+def handle_404_view(request, exception: Exception):
+    print(exception)
     return render(request, "404.html")
 
 
