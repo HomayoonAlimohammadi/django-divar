@@ -1,5 +1,25 @@
 from django.contrib import admin
-from polls.models import Choice, Question
+from django.contrib.auth.admin import UserAdmin  # type: ignore
+from polls.models import Choice, Question, User
 
-admin.site.register(Question)
-admin.site.register(Choice)
+
+class UserAdmin(UserAdmin):
+    model = User
+    list_display = [
+        "id",
+        "email",
+        "username",
+    ]
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ["id", "title", "user"]
+
+
+class ChoiceAdmin(admin.ModelAdmin):
+    list_display = ["id", "title", "question"]
+
+
+admin.site.register(User, UserAdmin)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Choice, ChoiceAdmin)

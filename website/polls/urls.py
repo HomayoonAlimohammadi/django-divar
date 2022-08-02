@@ -1,6 +1,7 @@
 from django.urls import path
 from polls import views
 
+
 handler404 = "polls.views.handle_404_view"
 
 app_name = "polls"

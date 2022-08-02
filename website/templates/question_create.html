@@ -9,7 +9,11 @@
 <div>
     <form method="post" action={% url 'polls:question_create' %}>
         {% csrf_token %} 
-        {{ form.as_p }}
+        {% for el in form %} 
+            <b>{{ el.label }}:</b><br/>
+            {{ el }}
+            <br/>
+        {% endfor %} 
         <button type="submit">Create</button>
     </form>
 </div>

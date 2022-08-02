@@ -1,9 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from polls.models import Question, Choice
-
-
-User = get_user_model()
+from polls.models import Question, Choice, User
 
 
 class UserCreateForm(forms.ModelForm):
@@ -12,7 +9,7 @@ class UserCreateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username", "email", "password"]
+        fields = ["username", "email", "password", "image"]
 
     def clean(self):
         cleaned_data = super(UserCreateForm, self).clean()
@@ -42,6 +39,7 @@ class UserUpdateForm(forms.Form):
     email = forms.EmailField(max_length=256)
     password = forms.CharField(widget=forms.PasswordInput(), required=False)
     confirm_password = forms.CharField(widget=forms.PasswordInput(), required=False)
+    image = forms.ImageField(required=False)
 
     def clean(self):
         cleaned_data = super(UserUpdateForm, self).clean()

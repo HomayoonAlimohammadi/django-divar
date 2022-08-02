@@ -1,6 +1,6 @@
 from __future__ import annotations
 from django.shortcuts import render, redirect, get_object_or_404
-from polls.models import Question, Choice
+from polls.models import Question, Choice, User
 from polls.forms import (
     ChoiceCreateForm,
     QuestionCreateForm,
@@ -8,14 +8,11 @@ from polls.forms import (
     UserLoginForm,
     UserUpdateForm,
 )
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views import generic
-
-
-User = get_user_model()
 
 
 def handle_404_view(request, exception: Exception):
@@ -32,16 +29,16 @@ def index_view(request, q: str | None = None):
     return render(request, "index.html", context=context)
 
 
-def user_list_view(request):
-    users = User.objects.all()
-    context = {"users": users}
-    return render(request, "user_list.html", context=context)
+class UserListView(generic.ListView):
+    model = User
+    template_name = "user_list.html"
+    context_object_name = "users"
 
 
 def user_create_view(request):
     if request.user.is_authenticated:
         return redirect("polls:index")
-    form = UserCreateForm(request.POST or None)
+    form = UserCreateForm(request.POST, request.FILES or None)
     if request.method == "POST":
         if form.is_valid():
             password = form.cleaned_data.pop("confirm_password")
@@ -66,32 +63,33 @@ def user_update_view(request, username: str):
             request, messages.ERROR, "You can only update your own profile!"
         )
         return redirect("polls:index")
-    form = UserUpdateForm(request.POST or None)
+    form = UserUpdateForm(request.POST, request.FILES or None)
     if request.method == "POST":
         if form.is_valid():
             first_name = form.cleaned_data.get("first_name")
             last_name = form.cleaned_data.get("last_name")
             email = form.cleaned_data.get("email")
+            image = form.cleaned_data.get("image")
             password = form.cleaned_data.get("password")
-            user.first_name = first_name  # type: ignore
-            user.last_name = last_name  # type: ignore
-            user.email = email  # type: ignore
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.image = image
             if password:
                 user.set_password(password)
             user.save()
-            return redirect("polls:user_details", username=user.username)  # type: ignore
+            return redirect("polls:user_details", username=user.username)
         else:
             messages.add_message(request, messages.ERROR, "Invalid data.")
 
     initial_data = {
-        "first_name": user.first_name,  # type: ignore
-        "last_name": user.last_name,  # type: ignore
-        "email": user.email,  # type: ignore
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
     }
     form = UserUpdateForm(initial=initial_data)
     context = {"form": form}
-    print(user)
-    return render(request, "user_update.html", context=context)  # type: ignore
+    return render(request, "user_update.html", context=context)
 
 
 def user_login_view(request):
@@ -157,14 +155,19 @@ def question_create_view(request):
     return render(request, "question_create.html", context=context)
 
 
-def question_details_view(request, pk: int):
-    question = get_object_or_404(Question, pk=pk)
-    context = {"question": question}
-    return render(request, "question_details.html", context=context)
+class QuestionDetailView(generic.DetailView):
+    model = Question
+    template_name = "question_details.html"
+    context_object_name = "question"
 
 
 @login_required(login_url=reverse_lazy("polls:user_login"))
 def question_submit_view(request, pk: int):
+    if pk in request.session.get("voted", []):
+        messages.add_message(
+            request, messages.ERROR, "You have already voted for this Question."
+        )
+        return redirect("polls:question_details", pk=pk)
     question = get_object_or_404(Question, pk=pk)
     if request.method == "POST":
         choice_pk = request.POST.get("choice")
@@ -174,7 +177,7 @@ def question_submit_view(request, pk: int):
         choice = get_object_or_404(Choice, pk=choice_pk)
         choice.users.add(request.user)
         choice.save()
-        print(choice)
+        request.session["voted"] = request.session.get("voted", []) + [pk]
         messages.add_message(request, messages.SUCCESS, "Voted submitted. Thanks!")
     context = {"question": question}
     return render(request, "question_submit.html", context=context)
@@ -195,21 +198,3 @@ def choice_create_view(request, question_id: int):
         return redirect("polls:question_details", pk=question_id)
     context = {"form": form, "question": question}
     return render(request, "choice_create.html", context=context)
-
-
-class UserListView(generic.ListView):
-    model = User
-    template_name = "user_list.html"
-    context_object_name = "users"
-
-
-class UserDetailView(generic.DetailView):
-    model = User
-    template_name = "user_details.html"
-    context_object_name = "user"
-
-
-class QuestionDetailView(generic.DetailView):
-    model = Question
-    template_name = "question_details.html"
-    context_object_name = "question"

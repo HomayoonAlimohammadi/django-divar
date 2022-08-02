@@ -6,7 +6,7 @@
 
 {% block body %} 
 <div>
-    <form action="{% url 'polls:user_update' request.user.username %}" method="post">
+    <form action="{% url 'polls:user_update' request.user.username %}" method="post" enctype="multipart/form-data">
         {% csrf_token %} 
         {{ form.as_p }}
         <button type="submit">Update</button>
