@@ -1,15 +1,12 @@
-from django.test import TestCase, Client
-from polls.models import Question, Choice
+from django.test import TestCase
+from polls.models import Question, Choice, User
 from django.contrib.auth import get_user_model, authenticate
 from django.urls import reverse
 from django.utils import timezone
 
 
-User = get_user_model()
-
-
-class UserTestCases(TestCase):
-    def test_user_create(self):
+class UserModelTestCases(TestCase):
+    def test_user_create_success(self):
         username = "test_username"
         password = "test_password"
         user = User.objects.create(username=username)
@@ -21,8 +18,11 @@ class UserTestCases(TestCase):
         user_auth = authenticate(username=username, password=password)
         self.assertEqual(user_auth, user)
 
+    def test_user_create_invalid_data_fail(self):
+        pass
 
-class QuestionTestCases(TestCase):
+
+class QuestionViewTestCases(TestCase):
     def setUp(self):
         self.user_1 = User.objects.create(username="testuser")
         self.user_1.set_password("password")
@@ -34,14 +34,14 @@ class QuestionTestCases(TestCase):
         self.assertEqual(res.status_code, 200)
         # print(res.context.get('questions'))
 
-    def test_question_add_not_authenticated_fail(self):
+    def test_question_add_authenticated_success(self):
         payload = {"title": "question"}
         res = self.client.post(reverse("polls:question_create"), payload)
-        self.assertEqual(res.status_code, 302)
+        self.assertEqual(res.status_code, 302)  # Redirects to index page.
         c = Question.objects.count()
         self.assertEqual(c, 1)
 
-    def test_question_list_less_than_five(self):
+    def test_index_question_list_less_than_five(self):
         res = self.client.get(reverse("polls:index"))
         for i in range(6):
             Question.objects.create(title=str(i), user=self.user_1)
@@ -50,7 +50,7 @@ class QuestionTestCases(TestCase):
 
     def test_question_details_view(self):
         question = Question.objects.create(title="test_question", user=self.user_1)
-        res = self.client.get(reverse("polls:question_details", args=[question.pk]))  # type: ignore
+        res = self.client.get(reverse("polls:question_details", args=[question.pk]))
         self.assertTrue(res.status_code, 200)
         self.assertEqual(res.context.get("question"), question)  # type: ignore
 
@@ -61,14 +61,18 @@ class QuestionModelTest(TestCase):
         self.user_1.set_password("password")
         self.user_1.save()
 
-    def test_question_is_recent(self):
+    def test_old_question_is_recent_false(self):
         old_time = (timezone.now() - timezone.timedelta(days=2)).date()
         old_question = Question.objects.create(title="old q", user=self.user_1)
         old_question.pub_date = old_time
         old_question.save()
         self.assertFalse(old_question.is_recent())
+
+    def test_new_question_is_recent_true(self):
         new_question = Question.objects.create(title="new q", user=self.user_1)
         self.assertTrue(new_question.is_recent())
+
+    def test_future_question_is_recent_false(self):
         future_time = (timezone.now() + timezone.timedelta(days=2)).date()
         future_question = Question.objects.create(title="future q", user=self.user_1)
         future_question.pub_date = future_time

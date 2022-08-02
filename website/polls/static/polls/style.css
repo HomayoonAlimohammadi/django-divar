@@ -1,6 +1,9 @@
 a, h2, b, h1, h3 {
     color: orange !important
 }
+a:hover {
+    color: orangered !important
+}
 
 body, html {
     height: 100%;

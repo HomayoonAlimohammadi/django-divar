@@ -6,25 +6,38 @@
 
 {% block head %} 
 <title>Profile</title>
+<style>
+    img {
+        height: 200px; 
+        width: 200px;
+        border-radius: 50%;
+        border: 5px solid orange
+    }
+    img:hover {
+        border: 10px solid orange
+
+    }
+</style>
 {% endblock %} 
 
 
 {% block body %} 
 <b>{{ user.username }}'s Profile</b>
+<hr>
 <p>
-    Profile Photo:
+    <b>Profile Photo:</b>
     <div>
-        <img src="{{ user.image.url }}" alt="User Image"/>
+        <a href="{% static user.image.url %}"><img src="{{ user.image.url }}" alt="User Image"/></a>
     </div>
 </p>
 <p>
-    Email: {{ user.email }}
+    <b>Email:</b> {{ user.email }}
 </p>
 <p>
-    First Name: {{ user.first_name }} 
+    <b>First Name:</b> {{ user.first_name }} 
 </p>
 <p>
-    Last Name: {{ user.last_name }}
+    <b>Last Name:</b> {{ user.last_name }}
 </p>
 {% if request.user.is_authenticated %} 
     {% if request.user == user %} 
